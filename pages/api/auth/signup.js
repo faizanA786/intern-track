@@ -14,7 +14,7 @@ export default async function handler(request, resource) {
     }
 
     // take body object from request, extract and assign to email and password consts
-    const {email, password} = request.body;
+    const {forename, email, password} = request.body;
     
     if (!email || !password || password.length < 6) {
         return resource.status(400).json({message: "missing or invalid fields"})
@@ -33,6 +33,7 @@ export default async function handler(request, resource) {
         const passwordHash = await bcrypt.hash(password, 10);
         const result = await userTable.insertOne({
             // auto-id
+            forename,
             email,
             passwordHash,
             timestamp: new Date()

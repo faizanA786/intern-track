@@ -1,5 +1,6 @@
 import jwt from "jsonwebtoken";
 
+// middleware, runs between request and actual route handler
 export function authenticate(handler) {
     return async function (request, resource) {
         const authHeader = request.headers.authorization;
