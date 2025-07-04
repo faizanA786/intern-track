@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import styles from './Signup.module.css';
+import styles from './Form.module.css';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 
@@ -55,6 +55,7 @@ export default function Signup() {
                 throw new Error("Signup failed!");
             }
             const data = await response.json();
+            localStorage.setItem("token", data.token); 
             router.push('/dashboard'); 
 
         }

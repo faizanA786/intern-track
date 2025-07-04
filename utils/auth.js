@@ -12,7 +12,7 @@ export function authenticate(handler) {
 
         try {
             const decoded = jwt.verify(token, process.env.JWT_SECRET);
-            request.user = decoded; // add new user property to request object 
+            request.user = {id: decoded.userId, email: decoded.email}; // add new user property to request object 
             return handler(request, resource);
         }
         catch (error) {

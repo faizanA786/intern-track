@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import styles from './Signup.module.css';
+import styles from './Form.module.css';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 
@@ -29,10 +29,10 @@ export default function Login() {
             
             if (response.status === 404) {
                 setMsg("User not found");
-                setConfirmPassword(true);
+                setEmail(true);
                 return;
             }
-            if (response.status === 400) {
+            if (response.status === 401) {
                 setMsg("Incorrect password");
                 setConfirmPassword(true);
                 return;
@@ -42,6 +42,7 @@ export default function Login() {
             }
 
             const data = await response.json();
+            localStorage.setItem("token", data.token); 
             router.push('/dashboard'); 
 
         }
