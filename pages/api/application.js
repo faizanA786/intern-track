@@ -19,16 +19,22 @@ async function handler(request, resource) {
             const {title, company, type, status, link, appliedDate, folder} = request.body;
             
             if (!title?.trim()) {
-                return resource.status(400).json({ message: "missing title field"});
+                return resource.status(400).json({ message: "title"});
             }
             if (!company?.trim()) {
-                return resource.status(400).json({ message: "missing company field"});
+                return resource.status(400).json({ message: "company"});
             }
-            if (!type) {
-                return resource.status(400).json({ message: "missing application type"});
+            if (!type?.trim()) {
+                return resource.status(400).json({ message: "type"});
             }
-            if (!status) {
-                return resource.status(400).json({ message: "Invalid status." });
+            if (!status?.trim()) {
+                return resource.status(400).json({ message: "status"});
+            }
+            if (!appliedDate?.trim()) {
+                return resource.status(400).json({ message: "date"});
+            }
+            if (!folder?.trim()) {
+                return resource.status(400).json({ message: "folder"});
             }
             
             const newApp = await Application.create({
