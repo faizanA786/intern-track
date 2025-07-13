@@ -1,6 +1,7 @@
 import React, {useState} from "react";
 import styles from './NewApplication.module.css';
 import Link from 'next/link';
+import { authenticate } from "../utils/auth";
 
 export default function NewApplication() {
     const[typeErr, setTypeErr] = useState(false)
@@ -31,8 +32,6 @@ export default function NewApplication() {
         setFolderErr(false)
         setStatusErr(false)
         setTypeErr(false)
-
-        const token = localStorage.getItem('token'); // get token from localStorage
 
         try {
             const response = await fetch("/api/application", {
@@ -94,7 +93,7 @@ export default function NewApplication() {
                 <h1 className={styles.h1}>New Application</h1>
                 <div className={styles.block}>
                     <div className={typeErr ? styles.groupErr : styles.group}>
-                        <div onClick={() => setType("Intern")} className={type === "Intern" ? styles["selected-box"]: styles.box}>
+                        <div onClick={() => setType("Internship")} className={type === "Internship" ? styles["selected-box"]: styles.box}>
                             Internship
                         </div>
                         <div onClick={() => setType("Placement")} className={type === "Placement" ? styles["selected-box"]: styles.box}>
@@ -128,7 +127,7 @@ export default function NewApplication() {
                     <input name="folder" className={folder ? styles.errorInput : styles.input} type="text" placeholder="Folder Name" defaultValue="default" />
 
                     <div className={styles.centre}>
-                        <button className={styles.button} type="submit">Submit</button>
+                        <button className={styles.button} type="submit">Create</button>
                     </div>
                 </div>
                 <p className={styles.err}>{msg}</p>
