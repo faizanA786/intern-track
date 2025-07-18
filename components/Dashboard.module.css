@@ -46,13 +46,19 @@
 
 .new {
     background-color: black;
+    border: none;
     color: white;
     border-radius: 0.4rem;
     width: 20%;
     font-size: 1.25vw;
     height: 6vh;
 }
-
+.new:hover {
+    background-color: #54cd6e;
+}
+.new:active {
+    background-color: #49b360;
+}
 .inputFilter {
     border: 1px solid #ccc;    
     border-radius: 0.5rem;

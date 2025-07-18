@@ -56,7 +56,7 @@ export default function Signup() {
             }
             const data = await response.json();
             localStorage.setItem("token", data.token); 
-            router.push('/dashboard'); 
+            router.push('/dashboard-page'); 
 
         }
         catch(error) {

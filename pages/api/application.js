@@ -11,11 +11,7 @@ async function handler(request, resource) {
             return resource.status(401).json({ message: "unauthorized" });
         }
 
-        if (request.method === "GET") {
-            const apps = await Application.find({ userId });
-            return resource.status(200).json(apps);
-        }
-        if (request.method === "POST") {
+        if (request.method === "POST") { // SUBMISSION
             const {title, company, type, status, link, appliedDate, folder} = request.body;
             
             if (!title?.trim()) {
