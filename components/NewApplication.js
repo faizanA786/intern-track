@@ -88,6 +88,7 @@ export default function NewApplication() {
         catch (error) {
             setMsg("Internal server error");
             console.error(error);
+            router.push("/login-page")
         }
     }
 

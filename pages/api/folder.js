@@ -16,14 +16,15 @@ async function handler(request, resource) {
             if (folder === "all") { // all
                 const apps = await Application.find({
                     userId
-                })
+                }).sort({ appliedDate: -1});
                 return resource.status(201).json(apps);
             }
             
             const apps = await Application.find({ // specific
                 folder,
                 userId
-            })
+            }).sort({ appliedDate: -1});
+            console.log(folder);
             return resource.status(201).json(apps);
         }
     }

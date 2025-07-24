@@ -7,7 +7,6 @@ export default function Dashboard() {
     const router = useRouter();
     
     const[forename, getForename] = useState("user");
-    const[folder, setFolder] = useState("");
     const[folders, setFolders] = useState([]);
     const[applications, setApplications] = useState([]);
 
@@ -29,13 +28,13 @@ export default function Dashboard() {
                     console.log("empty");
                     router.push('/newapp-page'); 
                 }
-                console.log("Fetched data:", data);
                 const folderNames = [...new Set(data.map(app => app.folder))];
                 setFolders(folderNames);
                 setApplications(data);
             }
             catch(error) {
                 console.log(error);
+                router.push("/login-page")
             }
         }
         fetchFolders();
@@ -45,8 +44,34 @@ export default function Dashboard() {
         router.push("/newapp-page");
     }
 
+    function getTypeColour(type) {
+        if (type === "Internship") { 
+            return "#9370DB";
+        }
+        if (type === "Placement") {
+            return "#20B2AA";
+        }
+        return "black";
+    }
+
+    function getStatusColour(type) {
+        if (type === "Offer") { 
+            return "#82db70ff";
+        }
+        if (type === "Interview") {
+            return "#34cacaff";
+        }
+        if (type === "Rejected") {
+            return "#ca3434ff";
+        }
+        if (type === "Applied") {
+            return "#ccbf0eff";
+        }
+        return "black";
+    }
+
     async function handleFolder(event) {
-        setFolder(event.target.value);
+        const selected = event.target.value;
         try {
             const response = await fetch("/api/folder", {
                 method: "POST",
@@ -55,9 +80,11 @@ export default function Dashboard() {
                     "Authorization": "Bearer " + localStorage.getItem("token")
                 },
                 body: JSON.stringify({
-                    folder
+                    folder: selected
                 })
             });
+            const data = await response.json();
+            setApplications(data);
         }
         catch(error) {
             setMsg("Internal server error");
@@ -80,7 +107,7 @@ export default function Dashboard() {
             <div className={styles.container}>
                 <div className={styles.filterContainer}>
                     <input className={styles.input} type="search" placeholder="Filter by Type, Title..."/>
-                    <select name="folder" className={styles.inputFilter} onChange={handleFolder} value={folder}>
+                    <select name="folder" className={styles.inputFilter} onChange={handleFolder}>
                         <option value="all">All</option>
                         {folders.map((name, index) => (
                             <option key={index} value={name}>{name}</option>
@@ -101,12 +128,12 @@ export default function Dashboard() {
                     <tbody>
                         {applications.map((app, index) => (
                             <tr key={index} className={styles.entry}>
-                                <td>{app.type}</td>
+                                <td style= {{ color: getTypeColour(app.type) }} >{app.type}</td>
                                 <td>
-                                    <Link href={"/editapp-page/" + app._id}>{app.title}</Link>
+                                    <Link className={styles.a} href={"/editapp-page/" + app._id}>{app.title}</Link>
                                 </td>
                                 <td>{app.company}</td>
-                                <td>{app.status}</td>
+                                <td style = {{ color: getStatusColour(app.status) }}> {app.status}</td>
                                 <td>{app.appliedDate?.split("T")[0]}</td>      
                             </tr>                  
                         ))}

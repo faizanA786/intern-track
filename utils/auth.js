@@ -16,7 +16,7 @@ export function authenticate(handler) {
             return handler(request, resource);
         }
         catch (error) {
-            return resource.status(401).json({message: "invalid or expired token"})
+            return resource.status(401).json({message: "expired token"})
         }
     }
 

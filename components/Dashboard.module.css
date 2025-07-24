@@ -13,7 +13,9 @@
     justify-content: space-between;
     width: 55%;
 }
-
+.a:visited {
+  color: blue;
+}
 .container {
     background-color: white;
     border-radius: 1rem;
@@ -40,7 +42,7 @@
     border-radius: 0.5rem;
     font-size: 1.5vw;
     width: 50%;
-    height: 4vh;
+    height: 5.8vh;
     padding: 1rem 1.2rem;
 }
 
@@ -51,7 +53,7 @@
     border-radius: 0.4rem;
     width: 20%;
     font-size: 1.25vw;
-    height: 6vh;
+    min-height: 6vh;
 }
 .new:hover {
     background-color: #54cd6e;
@@ -63,7 +65,7 @@
     border: 1px solid #ccc;    
     border-radius: 0.5rem;
     font-size: 1.5vw;
-    width: 40%;
+    width: 30%;
     height: 6vh;
     padding: 8px 12px;
 }
@@ -71,11 +73,11 @@
 .headers, .entry {
     margin-top: 4vh;
     gap: 4rem;
-    font-size: 1.5vw;
+    font-size: 2vw;
 }
 
 .entry {
-    font-size: 1.25vw;
+    font-size: 1.5vw;
 }
 
 .table {

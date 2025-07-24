@@ -54,6 +54,31 @@ export default function EditApplication({id}) {
         })();
     }, []); // empty array means only run once when component mounts
 
+    async function handleDelete(params) {
+        try {
+            const response = await fetch("/api/deleteApplication", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + localStorage.getItem("token")
+                },
+                body: JSON.stringify({
+                    id
+                })
+            });
+
+            const data = await response.json();
+            if (response.ok) {
+                router.push("/dashboard-page");
+            }
+
+
+        } catch (error) {
+            setMsg("Unable to delete application");
+            console.log(error);
+        }
+    }
+
     async function handleSubmit(event) {
         event.preventDefault();
         const form = event.target;
@@ -131,6 +156,9 @@ export default function EditApplication({id}) {
     return (
         <div className={styles.div}>
             <form className={styles.form} onSubmit={handleSubmit}>
+                <div className={styles.del}>
+                    <img onClick={handleDelete} src="/images/del.jpg" />
+                </div>
                 <h1 className={styles.h1}>Edit Application</h1>
                 <div className={styles.block}>
                     <div className={typeErr ? styles.groupErr : styles.group}>

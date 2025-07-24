@@ -36,6 +36,7 @@
 }
 
 .form {
+    position: relative;
     background-color: white;
     border-radius: 1rem;
     padding: 2vw 3vw 2vw 3vw;
@@ -97,6 +98,21 @@
     cursor: pointer;
     padding: 1vw;
     border: 1px solid #ccc;    
+}
+
+.del {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 10%;
+    margin: 0.4rem;
+}
+.del img:hover {
+    cursor: pointer;
+    width: 105%;
+}
+.del img {
+    width: 100%;
 }
 
 .centre {
