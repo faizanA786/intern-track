@@ -1,22 +1,28 @@
 .wrapper {
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
     height: 90vh;
+    margin-bottom: 8rem;
 }
 
 .stat {
     display: flex;
     flex-direction: row;
     align-items: center;
-    justify-content: space-between;
-    width: 55%;
+    gap: 3.5rem;
+    width: 60%;
+    font-size: 1.25vw;
+}
+.a {
+    color: #0000EE;
+    cursor: pointer;
 }
 .a:visited {
-  color: blue;
+  color: #0000EE;
 }
-.container {
+.container, .blurContainer {
     background-color: white;
     border-radius: 1rem;
     display: flex;
@@ -25,7 +31,14 @@
     align-items: center;
     text-align: center;
     padding: 2rem;
-    min-width: 60%;
+    width: 70%;
+    margin-top: 2rem;
+}
+.blurContainer {
+    filter: blur(8px);
+    z-index: 99;
+    pointer-events: none;
+    user-select: none;
 }
 
 .filterContainer {
@@ -44,6 +57,11 @@
     width: 50%;
     height: 5.8vh;
     padding: 1rem 1.2rem;
+}
+
+.hr {
+    border: 1px solid black;
+    width: 100%;
 }
 
 .new {

@@ -10,8 +10,12 @@ body {
 
 th, td {
   white-space: nowrap;
-  overflow: hidden;
+  overflow-x: hidden;
   text-overflow: ellipsis;
-  max-width: 20vw;
-  padding: 1.5rem;
+  max-width: 14vw;
+  padding: 2rem;
+}
+
+th {
+  padding: 1rem;
 }
