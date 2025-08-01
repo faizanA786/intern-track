@@ -1,11 +1,11 @@
 import React, {useState} from "react";
-import styles from './NewApplication.module.css';
+import styles from './Application.module.css';
 import Link from 'next/link';
 import { authenticate } from "../utils/auth";
 import { useRouter } from 'next/router';
 import { useEffect } from "react";
 
-export default function EditApplication({id}) {
+export default function EditApplication({id, onSubmit, onClose}) {
     const[preTitle, setPreTitle] = useState("")
     const[preCompany, setPreCompany] = useState("")
     const[preLink, setPreLink] = useState("")
@@ -38,8 +38,16 @@ export default function EditApplication({id}) {
                         id
                     })
                 });
+                if (response.status === 429) {
+                    setMsg("Too many requests, please wait");
+                    return;
+                }
+                if (response.status === 401) { // expired token
+                    router.push("/login-page");
+                }
 
                 const data = await response.json();
+
                 setType(data.type);
                 setStatus(data.status);
                 setPreTitle(data.title);
@@ -54,7 +62,7 @@ export default function EditApplication({id}) {
         })();
     }, []); // empty array means only run once when component mounts
 
-    async function handleDelete(params) {
+    async function handleDelete() {
         try {
             const response = await fetch("/api/deleteApplication", {
                 method: "POST",
@@ -69,11 +77,10 @@ export default function EditApplication({id}) {
 
             const data = await response.json();
             if (response.ok) {
-                router.push("/dashboard-page");
+                onSubmit();
             }
-
-
-        } catch (error) {
+        } 
+        catch (error) {
             setMsg("Unable to delete application");
             console.log(error);
         }
@@ -116,6 +123,11 @@ export default function EditApplication({id}) {
                 })
             });
 
+            if (response.status === 429) {
+                setMsg("Too many requests, please wait");
+                return;
+            }
+
             if (!response.ok) {
                 const data = await response.json();
                 if (data.message === "title") {
@@ -144,7 +156,7 @@ export default function EditApplication({id}) {
             }
 
             // setMsg("Application submitted successfully!");
-            router.push("/dashboard-page/");
+            onSubmit();
             form.reset();
         } 
         catch (error) {
@@ -158,6 +170,9 @@ export default function EditApplication({id}) {
             <form className={styles.form} onSubmit={handleSubmit}>
                 <div className={styles.del}>
                     <img onClick={handleDelete} src="/images/del.jpg" />
+                </div>
+                <div className={styles.close}>
+                    <img onClick={onClose} src="/images/close.svg" />
                 </div>
                 <h1 className={styles.h1}>Edit Application</h1>
                 <div className={styles.block}>

@@ -22,6 +22,7 @@ export default function Signup() {
         const agreed = form.terms?.checked;
         
         setConfirmPassword(false);
+        setForename(false);
         setEmail(false);
 
         if (!agreed) {
@@ -51,9 +52,25 @@ export default function Signup() {
                 setEmail(true);
                 return;
             }
-            if (!response.ok) {
-                throw new Error("Signup failed!");
+            if (response.status === 429) {
+                setMsg("Too many requests, please wait");
+                return;
             }
+            if (!response.ok) {
+                const data = await response.json();
+                if (data.message === "forename") {
+                    setForename(true);
+                }
+                if (data.message === "email") {
+                    setEmail(true);
+                }
+                if (data.message === "password") {
+                    setConfirmPassword(true);
+                }
+                setMsg("Fields must not be left empty");
+                return;
+            }
+
             const data = await response.json();
             localStorage.setItem("token", data.token); 
             router.push('/dashboard-page'); 

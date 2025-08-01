@@ -7,9 +7,10 @@ import EditApplication from "./EditApplication";
 
 export default function Dashboard() {
     const router = useRouter();
-    const {id} = router.query;
+    const[id, setId] = useState(null);
     
-    const [showForm, setShowForm] = useState(false);
+    const [showNewForm, setShowNewForm] = useState(false);
+    const [showEditForm, setShowEditForm] = useState(false);
 
     const[applied, setApplied] = useState(0);
     const[offer, setOffer] = useState(0);
@@ -69,10 +70,14 @@ export default function Dashboard() {
                 })
             });
 
+            if (response.status === 401) {
+                router.push("/login-page");
+            }
+
             const data = await response.json();
             if (data.length === 0) {
                 console.log("empty");
-                router.push('/newapp-page'); 
+                setShowNewForm(true); 
             }
             const folderNames = [...new Set(data.map(app => app.folder))];
             setFolders(folderNames);
@@ -96,6 +101,11 @@ export default function Dashboard() {
                     folder: selected
                 })
             });
+            
+            if (response.status === 401) {
+                router.push("/login-page");
+            }
+
             const data = await response.json();
             setApplications(data);
         }
@@ -107,7 +117,12 @@ export default function Dashboard() {
 
     function handleNewApp(event) { 
         event.preventDefault();
-        setShowForm(true);
+        setShowNewForm(true);
+    }
+
+    function handleEditApp(id) {
+        setId(id);
+        setShowEditForm(true);
     }
 
     function getTypeColour(type) {
@@ -138,10 +153,21 @@ export default function Dashboard() {
 
     return (
         <div className={styles.wrapper}>
-            {showForm ? (<NewApplication onClose={() => setShowForm(false)} />) : null}
-            {id ? (<EditApplication id={id} onClose={() => router.push("dashboard-page", undefined, { shallow: true })} />) : null}
+            {showNewForm ? (
+                <NewApplication 
+                    onClose={() => setShowNewForm(false)} 
+                    onSubmit={() => window.location.reload()}
+                />
+            ) : null}
 
-            <div className={showForm  || id ? styles.blurContainer : styles.container}>
+            {showEditForm ? (
+                <EditApplication id={id} 
+                    onClose={() => setShowEditForm(false)} 
+                    onSubmit={() => window.location.reload()}
+                />
+            ) : null}
+
+            <div className={showNewForm  || showEditForm ? styles.blurContainer : styles.container}>
                 <div className={ styles.filterContainer }>
                     <div className={styles.stat}>
                         <p>Applied: {applied}</p>
@@ -173,7 +199,7 @@ export default function Dashboard() {
                             <tr key={index} className={styles.entry}>
                                 <td style= {{ color: getTypeColour(app.type) }} >{app.type}</td>
                                 <td>
-                                    <a className={styles.a} onClick={() => router.push({ pathname: '/dashboard-page', query: { id: app._id } }, undefined, { shallow: true })}>
+                                    <a className={styles.a} onClick={() => handleEditApp(app._id)}>
                                         {app.title}
                                     </a>                                
                                 </td>

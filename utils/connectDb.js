@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 const MONGODB_URI = process.env.MONGO_URI;
 if (!MONGODB_URI) {
-    throw new Error('Missing MongoDB URI');
+    throw new Error("no URI for mongo");
 }
 
 let cached = global.mongoose;

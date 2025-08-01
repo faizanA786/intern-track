@@ -26,6 +26,11 @@ export default function Login() {
                 headers: {"Content-Type": "application/json"},
                 body: JSON.stringify({email, password})
             });
+
+            if (response.status === 429) {
+                setMsg("Too many requests, please wait");
+                return;
+            }
             
             if (response.status === 404) {
                 setMsg("User not found");
@@ -38,7 +43,15 @@ export default function Login() {
                 return;
             }
             if (!response.ok) {
-                throw new Error("Signup failed!");
+                const data = await response.json();
+                if (data.message === "email") {
+                    setEmail(true);
+                }
+                if (data.message === "password") {
+                    setConfirmPassword(true);
+                }
+                setMsg("Fields must not be left empty");
+                return;
             }
 
             const data = await response.json();

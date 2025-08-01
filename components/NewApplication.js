@@ -1,10 +1,10 @@
 import React, {useState} from "react";
-import styles from './NewApplication.module.css';
+import styles from './Application.module.css';
 import Link from 'next/link';
 import { authenticate } from "../utils/auth";
 import { useRouter } from 'next/router';
 
-export default function NewApplication() {
+export default function NewApplication({ onClose, onSubmit }) {
     const router = useRouter();
 
     const[typeErr, setTypeErr] = useState(false)
@@ -54,6 +54,14 @@ export default function NewApplication() {
                 })
             });
 
+            if (response.status === 429) {
+                setMsg("Too many requests, please wait");
+                return;
+            }
+            if (response.status === 401) { // expired token
+                router.push("/login-page");
+            }
+
             if (!response.ok) {
                 const data = await response.json();
                 if (data.message === "title") {
@@ -82,13 +90,12 @@ export default function NewApplication() {
             }
 
             // setMsg("Application submitted successfully!");
-            router.push("dashboard-page");
+            onSubmit()
             form.reset();
         } 
         catch (error) {
             setMsg("Internal server error");
             console.error(error);
-            router.push("/login-page")
         }
     }
 
@@ -96,6 +103,9 @@ export default function NewApplication() {
         <div className={styles.div}>
             <form className={styles.form} onSubmit={handleSubmit}>
                 <h1 className={styles.h1}>New Application</h1>
+                <div className={styles.close}>
+                    <img onClick={onClose} src="/images/close.svg" />
+                </div>
                 <div className={styles.block}>
                     <div className={typeErr ? styles.groupErr : styles.group}>
                         <div onClick={() => setType("Internship")} className={type === "Internship" ? styles["selected-box"]: styles.box}>

@@ -2,6 +2,7 @@ import { authenticate } from "../../utils/auth";
 import Application from "../../models/Application";
 import connectDb from "../../utils/connectDb";
 import App from "../editapp-page";
+import { rateLimiter } from "../../utils/rateLimit";
 
 async function handler(request, resource) {
     try {
@@ -11,6 +12,9 @@ async function handler(request, resource) {
         if (!userId) {
             return resource.status(401).json({ message: "unauthorized" });
         }
+
+        const allowed = await rateLimiter(request, resource, "editApp");
+        if (!allowed) return;
 
         if (request.method === "POST") { // SUBMISSION
             const {title, company, type, status, link, appliedDate, folder} = request.body;

@@ -103,18 +103,26 @@
     border: 1px solid #ccc;    
 }
 
-.del {
+.del, .close{
     position: absolute;
     top: 0;
     right: 0;
     width: 10%;
     margin: 0.4rem;
 }
-.del img:hover {
+.close {
+    left: 0;
+    width: 7%;
+}
+
+.del img:hover, .close img:hover {
     cursor: pointer;
     width: 105%;
 }
-.del img {
+.del img{
+    width: 100%;
+}
+.close img {
     width: 100%;
 }
 
