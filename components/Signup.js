@@ -90,7 +90,7 @@ export default function Signup() {
                 <input name="password" className={confirmpassword ? styles.errorInput : styles.input} type="password"  placeholder="Password" required/>
                 <input name="confirmpassword" className={confirmpassword ? styles.errorInput : styles.input} type="password"  placeholder="Confirm Password" required/>
                 <label className={styles.label}>
-                    <input name="terms" type="checkbox"/><p className={styles.p}>I agree to the <a className={styles.a} href="">Terms & Services</a></p>
+                    <input name="terms" type="checkbox"/><p className={styles.p}>I agree to the <a className={styles.a} href="https://github.com/faizanA786/intern-track/blob/development/TERMS.md" target="_blank">Terms & Services</a></p>
                 </label>
                 <button className={styles.button} type="submit">Register</button>
                 <p className={styles.err}>{msg}</p>

@@ -22,8 +22,6 @@ export async function rateLimiter(request, resource, configName) {
     const ip = request.headers["x-forwarded-for"] || request.socket.remoteAddress || "unknown";
     const result = await rateLimit.limit(ip);
 
-    console.log(`[RateLimit] IP: ${ip} - Remaining: ${result.remaining} - Success: ${result.success}`);
-
     if (!result.success) {
         resource.status(429).json({ message: "too many requests"});
         return false;

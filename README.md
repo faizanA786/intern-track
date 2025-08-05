@@ -3,6 +3,8 @@
 # Intern-Track
 Intern-Track is a simple platform to help students manage their internship/placement applications. It allows users to track application statuses, deadlines, company info and more all in one place.
 
+![Dashboard](https://i.imgur.com/dwz09Zl.png)
+
 ## Features
 - Add, edit, and delete internship/placemenbt applications  
 - Track status (e.g., Applied, Interview, Offer)  
