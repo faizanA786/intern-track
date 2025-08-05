@@ -1,0 +1,103 @@
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    height: 90vh;
+    margin-bottom: 8rem;
+}
+
+.stat {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 3.5rem;
+    width: 60%;
+    font-size: 1.25vw;
+}
+.a {
+    color: #0000EE;
+    cursor: pointer;
+}
+.a:visited {
+  color: #0000EE;
+}
+.container, .blurContainer {
+    background-color: white;
+    border-radius: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 2rem;
+    width: 70%;
+    margin-top: 2rem;
+}
+.blurContainer {
+    filter: blur(8px);
+    z-index: 99;
+    pointer-events: none;
+    user-select: none;
+}
+
+.filterContainer {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+    width: 100%;
+}
+
+.input {
+    border: 1px solid #ccc;    
+    border-radius: 0.5rem;
+    font-size: 1.5vw;
+    width: 50%;
+    height: 5.8vh;
+    padding: 1rem 1.2rem;
+}
+
+.hr {
+    border: 1px solid black;
+    width: 100%;
+}
+
+.new {
+    background-color: black;
+    border: none;
+    color: white;
+    border-radius: 0.4rem;
+    width: 20%;
+    font-size: 1.25vw;
+    min-height: 6vh;
+}
+.new:hover {
+    background-color: #54cd6e;
+}
+.new:active {
+    background-color: #49b360;
+}
+.inputFilter {
+    border: 1px solid #ccc;    
+    border-radius: 0.5rem;
+    font-size: 1.5vw;
+    width: 30%;
+    height: 6vh;
+    padding: 8px 12px;
+}
+
+.headers, .entry {
+    margin-top: 4vh;
+    gap: 4rem;
+    font-size: 2vw;
+}
+
+.entry {
+    font-size: 1.5vw;
+}
+
+.table {
+    width: 100%;
+}

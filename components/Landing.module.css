@@ -1,0 +1,68 @@
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 90vh;
+}
+
+.h1 {
+    margin: 0;
+    font-size: 3.5rem;
+}
+
+.h2 {
+    font-size: 2rem;
+    font-weight: 400;
+    margin-bottom: 2rem;
+}
+
+.container {
+    display: flex;
+    gap: 2rem;
+}
+
+.footer {
+    margin-top: 4rem;
+    font-size: 1.2rem;
+    text-align: center;
+    }
+
+.register, .signIn {
+    font-size: 1.8rem;
+    padding: 1rem;
+    border-radius: 1rem;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+}
+
+.register {
+    background-color: rgb(145, 255, 117);
+}
+
+.register:hover {
+    background-color: rgb(120, 220, 90);
+}
+
+.register:active {
+    background-color: rgb(100, 180, 70);
+    transform: scale(0.95);
+}
+
+.signIn {
+    background-color: white;
+    color: black; 
+    transition: background-color 0.3s ease, border-color 0.3s ease, transform 0.1s ease;
+}
+
+.signIn:hover {
+    background-color: #f0f0f0;
+    border-color: #999;
+}
+
+.signIn:active {
+    background-color: #e0e0e0;
+    border-color: #666;
+    transform: scale(0.95);
+}

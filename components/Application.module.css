@@ -1,0 +1,168 @@
+.div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    position: fixed;
+    z-index: 100;
+}
+
+.h1 {
+    margin-top: 0;
+    font-size: 3vw;
+}
+
+.p {
+    margin: 0;
+}
+
+.err {
+    margin: 0;
+    margin-top: 1rem;
+    color: red;
+}
+.errorInput {
+    border: 1px solid red;
+    border-radius: 0.5rem;
+    font-size: 1.5vw;
+    height: 5vh;
+    padding: 8px 12px;
+}
+
+.a {
+    text-decoration: none;
+}
+.a:hover {
+    text-decoration: underline;
+}
+
+.form {
+    position: relative;
+    background-color: white;
+    border-radius: 1rem;
+    padding: 2vw 3vw 2vw 3vw;
+    width: 100%;
+    text-align: center;
+    border: 2px solid black;
+}
+.grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* 2 equal columns */
+    gap: 2rem;
+}
+
+.input {
+    border: 1px solid #ccc;    
+    border-radius: 0.5rem;
+    font-size: 1.5vw;
+    height: 5vh;
+    padding: 8px 12px;
+}
+
+.block {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+    width: 100%;
+    margin: 2.5rem 0 2rem 0;
+}
+.group {
+    display: flex;
+}
+.groupErr {
+    display: flex;
+    border: 1.5px solid red;
+}
+.box {
+    display: flex;
+    border: 1px solid #ccc;    
+    justify-content: center;
+    align-items: center;
+    background-color: black;
+    color: white;
+    text-align: center;
+    font-size: 1.5vw;
+    cursor: pointer;
+    width: 100%;
+    padding: 1vw;
+}
+.selected-box {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #49b360;
+    color: white;
+    text-align: center;
+    font-size: 1.5vw;
+    cursor: pointer;
+    padding: 1vw;
+    border: 1px solid #ccc;    
+}
+
+.del, .close{
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 10%;
+    margin: 0.4rem;
+}
+.close {
+    left: 0;
+    width: 7%;
+}
+
+.del img:hover, .close img:hover {
+    cursor: pointer;
+}
+.del img{
+    width: 100%;
+}
+.close img {
+    width: 100%;
+}
+
+.centre {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+.button {
+    background-color: black; 
+    font-size: 1.75vw;
+    color: white;
+    border: none;
+    border-radius: 0.5rem;
+    width: 100%;
+    height: 100%;
+}
+.button:hover, .box:hover {
+    background-color: #54cd6e;
+}
+.button:active, .box:active {
+    background-color: #49b360;
+}
+
+@media screen and (max-width: 768px) {
+.form {
+    width: 90%;
+    padding: 2rem;
+}
+
+.input, .errorInput, .button {
+    font-size: 1rem;
+    height: auto;
+}
+
+.button {
+    font-size: 1.25rem;
+    height: 3rem;
+}
+
+.h1 {
+    font-size: 2rem;
+}
+}
