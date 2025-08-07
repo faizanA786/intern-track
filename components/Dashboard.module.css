@@ -23,6 +23,7 @@
   color: #0000EE;
 }
 .container, .blurContainer {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
     background-color: white;
     border-radius: 1rem;
     display: flex;
@@ -72,6 +73,8 @@
     width: 20%;
     font-size: 1.25vw;
     min-height: 6vh;
+    transition: background-color 0.3s ease;
+    cursor: pointer;
 }
 .new:hover {
     background-color: #54cd6e;
@@ -86,6 +89,7 @@
     width: 30%;
     height: 6vh;
     padding: 8px 12px;
+    cursor: pointer;
 }
 
 .headers, .entry {

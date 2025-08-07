@@ -3,7 +3,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: 90vh;
+    height: 100vh;
 }
 
 .h1 {
@@ -19,14 +19,34 @@
 
 .container {
     display: flex;
-    gap: 2rem;
+    justify-content: center;
+    gap: 2.5rem;
+}
+
+.main {
+    background-color: white;
+    border-radius: 1.5rem;
+    padding: 2rem;
+    display: flex;
+    height: 30%;
+    justify-content: space-between;
+    align-items: center;
+    text-align: center;
+    flex-direction: column;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
 
 .footer {
-    margin-top: 4rem;
-    font-size: 1.2rem;
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+    font-size: 1rem;
     text-align: center;
+    gap: 1rem;
+    a {
+        text-decoration: none;
     }
+}
 
 .register, .signIn {
     font-size: 1.8rem;
@@ -51,18 +71,15 @@
 }
 
 .signIn {
-    background-color: white;
-    color: black; 
-    transition: background-color 0.3s ease, border-color 0.3s ease, transform 0.1s ease;
+    background-color: #ddd;
+    color: black;
 }
-
 .signIn:hover {
-    background-color: #f0f0f0;
+    background-color: #ccc;
     border-color: #999;
 }
-
 .signIn:active {
-    background-color: #e0e0e0;
-    border-color: #666;
+    background-color: #bbb;
     transform: scale(0.95);
 }
+
