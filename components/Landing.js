@@ -22,7 +22,6 @@ export default function Landing() {
                     <a href="https://github.com/faizanA786/intern-track/tree/master" target="_blank">Source Code</a>
                     <a href="https://github.com/faizanA786/intern-track/blob/master/PRIVACY_POLICY.md" target="_blank">Privacy Policy</a>
                 </footer>
-
             </div>
         </div>
 
