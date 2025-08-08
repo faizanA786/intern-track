@@ -44,7 +44,7 @@
     padding: 2vw 3vw 2vw 3vw;
     width: 100%;
     text-align: center;
-    border: 2px solid black;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
 }
 .grid {
     display: grid;
@@ -110,13 +110,17 @@
     width: 10%;
     margin: 0.4rem;
 }
+
 .close {
     left: 0;
     width: 7%;
+    transition: transform 0.2s ease-in-out;
 }
 
 .del img:hover, .close img:hover {
     cursor: pointer;
+    transform: scale(1.1);
+    border-radius: 2rem;
 }
 .del img{
     width: 100%;
@@ -138,6 +142,8 @@
     border-radius: 0.5rem;
     width: 100%;
     height: 100%;
+    transition: background-color 0.3s ease;
+    cursor: pointer;
 }
 .button:hover, .box:hover {
     background-color: #54cd6e;

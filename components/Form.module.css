@@ -37,6 +37,7 @@
 
 .form {
     background-color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
     border-radius: 1rem;
     padding: 2vw 3vw 2vw 3vw;
     width: 25%;
@@ -105,6 +106,8 @@
     border-radius: 0.5rem;
     width: 100%;
     height: 3vw;
+    transition: background-color 0.3s ease;
+    cursor: pointer;
 }
 .button:hover {
     background-color: #54cd6e;
