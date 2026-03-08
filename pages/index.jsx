@@ -1,3 +1,5 @@
+//LANDING PAGE 
+
 import React, {useEffect, useState} from "react";
 import { useRouter } from 'next/router';
 import styles from './Landing.module.css';
@@ -13,8 +15,8 @@ export default function Landing() {
                     <h1 className={styles.h1}>Intern-Track</h1>
                     <h2 className={styles.h2}>Track and organise your internship/placement applications, all in one place.</h2>
                     <div className={styles.container}>
-                        <button type="submit" onClick={() => {router.push("/signup-page")}} className={styles.register}>Register</button>
-                        <button type="submit" onClick={() => {router.push("/login-page")}} className={styles.signIn}>Sign In</button>
+                        <button type="submit" onClick={() => {router.push("/Signup-Page")}} className={styles.register}>Register</button>
+                        <button type="submit" onClick={() => {router.push("/Login-Page")}} className={styles.signIn}>Sign In</button>
                     </div>
                 </div>
 

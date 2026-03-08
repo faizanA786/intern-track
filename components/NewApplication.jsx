@@ -1,16 +1,10 @@
 import React, {useState} from "react";
 import styles from './Application.module.css';
 import Link from 'next/link';
-import { authenticate } from "../utils/auth";
 import { useRouter } from 'next/router';
-import { useEffect } from "react";
 
-export default function EditApplication({id, onSubmit, onClose}) {
-    const[preTitle, setPreTitle] = useState("")
-    const[preCompany, setPreCompany] = useState("")
-    const[preLink, setPreLink] = useState("")
-    const[preDate, setPreDate] = useState("")
-    const[preFolder, setPreFolder] = useState("")
+export default function NewApplication({ onClose, onSubmit }) {
+    const router = useRouter();
 
     const[typeErr, setTypeErr] = useState(false)
     const[statusErr, setStatusErr] = useState(false)
@@ -22,69 +16,6 @@ export default function EditApplication({id, onSubmit, onClose}) {
     const[type, setType] = useState("")
     const[status, setStatus] = useState("")
     const[msg, setMsg] = useState("");
-
-    const router = useRouter();
-
-    useEffect(() => {
-        (async () => {
-            try {
-                const response = await fetch("/api/getApplication", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": "Bearer " + localStorage.getItem("token")
-                    },
-                    body: JSON.stringify({
-                        id
-                    })
-                });
-                if (response.status === 429) {
-                    setMsg("Too many requests, please wait");
-                    return;
-                }
-                if (response.status === 401) { // expired token
-                    router.push("/login-page");
-                }
-
-                const data = await response.json();
-
-                setType(data.type);
-                setStatus(data.status);
-                setPreTitle(data.title);
-                setPreCompany(data.company);
-                setPreLink(data.link);
-                setPreDate(data.appliedDate.slice(0, 10));
-                setPreFolder(data.folder);
-
-            } catch (error) {
-                console.log(error);
-            }
-        })();
-    }, []); // empty array means only run once when component mounts
-
-    async function handleDelete() {
-        try {
-            const response = await fetch("/api/deleteApplication", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": "Bearer " + localStorage.getItem("token")
-                },
-                body: JSON.stringify({
-                    id
-                })
-            });
-
-            const data = await response.json();
-            if (response.ok) {
-                onSubmit();
-            }
-        } 
-        catch (error) {
-            setMsg("Unable to delete application");
-            console.log(error);
-        }
-    }
 
     async function handleSubmit(event) {
         event.preventDefault();
@@ -105,14 +36,13 @@ export default function EditApplication({id, onSubmit, onClose}) {
         setTypeErr(false)
 
         try {
-            const response = await fetch("/api/editApplication", {
+            const response = await fetch("/api/application", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                     "Authorization": "Bearer " + localStorage.getItem("token")
                 },
                 body: JSON.stringify({
-                    id,
                     title,
                     company,
                     type,
@@ -126,6 +56,9 @@ export default function EditApplication({id, onSubmit, onClose}) {
             if (response.status === 429) {
                 setMsg("Too many requests, please wait");
                 return;
+            }
+            if (response.status === 401) { // expired token
+                router.push("/login-page");
             }
 
             if (!response.ok) {
@@ -156,7 +89,7 @@ export default function EditApplication({id, onSubmit, onClose}) {
             }
 
             // setMsg("Application submitted successfully!");
-            onSubmit();
+            onSubmit()
             form.reset();
         } 
         catch (error) {
@@ -168,13 +101,10 @@ export default function EditApplication({id, onSubmit, onClose}) {
     return (
         <div className={styles.div}>
             <form className={styles.form} onSubmit={handleSubmit}>
-                <div className={styles.del}>
-                    <img onClick={handleDelete} src="/images/del.jpg" />
-                </div>
+                <h1 className={styles.h1}>New Application</h1>
                 <div className={styles.close}>
                     <img onClick={onClose} src="/images/close.svg" />
                 </div>
-                <h1 className={styles.h1}>Edit Application</h1>
                 <div className={styles.block}>
                     <div className={typeErr ? styles.groupErr : styles.group}>
                         <div onClick={() => setType("Internship")} className={type === "Internship" ? styles["selected-box"]: styles.box}>
@@ -203,15 +133,15 @@ export default function EditApplication({id, onSubmit, onClose}) {
                 </div>
 
                 <div className={styles.grid}>
-                    <input name="title" defaultValue={preTitle} className={title ? styles.errorInput : styles.input} type="text" placeholder="Job Title" required />
-                    <input name="company" defaultValue={preCompany} className={company ? styles.errorInput : styles.input} type="text" placeholder="Company Name" required />
+                    <input name="title" className={title ? styles.errorInput : styles.input} type="text" placeholder="Job Title" required />
+                    <input name="company" className={company ? styles.errorInput : styles.input} type="text" placeholder="Company Name" required />
 
-                    <input name="link" defaultValue={preLink} className={link ? styles.errorInput : styles.input} type="url" placeholder="Application Link (optional)" />
-                    <input name="appliedDate" defaultValue={preDate} className={date ? styles.errorInput : styles.input} type="date" placeholder="Applied Date" />
-                    <input name="folder" defaultValue={preFolder} className={folder ? styles.errorInput : styles.input} type="text" placeholder="Folder Name"/>
+                    <input name="link" className={link ? styles.errorInput : styles.input} type="url" placeholder="Application Link (optional)" />
+                    <input name="appliedDate" className={date ? styles.errorInput : styles.input} type="date" placeholder="Applied Date" />
+                    <input name="folder" className={folder ? styles.errorInput : styles.input} type="text" placeholder="Folder Name" defaultValue="default" />
 
                     <div className={styles.centre}>
-                        <button className={styles.button} type="submit">Update</button>
+                        <button className={styles.button} type="submit">Create</button>
                     </div>
                 </div>
                 <p className={styles.err}>{msg}</p>

@@ -6,7 +6,7 @@ import Link from 'next/link';
 export default function Login() {
     const router = useRouter();
 
-    const [email, setEmail] = useState(false);
+    const [username, setusername] = useState(false);
     const [confirmpassword, setConfirmPassword] = useState(false);
     const [msg, setMsg] = useState('');  
     
@@ -14,17 +14,17 @@ export default function Login() {
         event.preventDefault();
         
         const form = event.target;
-        const email = form.email.value;
+        const username = form.username.value;
         const password = form.password.value;
         
         setConfirmPassword(false);
-        setEmail(false);
+        setusername(false);
 
         try {
             const response = await fetch("/api/auth/login", {
                 method: "POST",
                 headers: {"Content-Type": "application/json"},
-                body: JSON.stringify({email, password})
+                body: JSON.stringify({username, password})
             });
 
             if (response.status === 429) {
@@ -34,7 +34,7 @@ export default function Login() {
             
             if (response.status === 404) {
                 setMsg("User not found");
-                setEmail(true);
+                setusername(true);
                 return;
             }
             if (response.status === 401) {
@@ -44,8 +44,8 @@ export default function Login() {
             }
             if (!response.ok) {
                 const data = await response.json();
-                if (data.message === "email") {
-                    setEmail(true);
+                if (data.message === "username") {
+                    setusername(true);
                 }
                 if (data.message === "password") {
                     setConfirmPassword(true);
@@ -69,12 +69,12 @@ export default function Login() {
         <div className={styles.div}>
             <form className={styles.form} onSubmit={handleSubmit}>
                 <h1 className={styles.h1}>Sign In</h1>
-                <input name="email" className={email ? styles.errorInput : styles.input} type="email" placeholder="Email" required/>
+                <input name="username" className={username ? styles.errorInput : styles.input} placeholder="Username" required/>
                 <input name="password" className={confirmpassword ? styles.errorInput : styles.input} type="password"  placeholder="Password" required/>
                 <button className={styles.button} type="submit">Login</button>
                 <p className={styles.err}>{msg}</p>
                 <p className={styles.p}>
-                    Don't have an account?{" "}<Link className={styles.a} href="signup-page">Register here</Link>
+                    Don't have an account?{" "}<Link className={styles.a} href="Signup-Page">Register here</Link>
                 </p>
             </form>
         </div>

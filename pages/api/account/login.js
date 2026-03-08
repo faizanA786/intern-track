@@ -2,7 +2,6 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import connectDb from '../../../utils/connectDb';
 import User from '../../../models/User';
-import { rateLimiter } from "../../../utils/rateLimit";
 
 export default async function handler(request, resource) {
     if (request.method !== "POST") {

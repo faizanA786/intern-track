@@ -1,10 +1,23 @@
 import mongoose from 'mongoose';
 
-const UserSchema = new mongoose.Schema({
-    forename: String,
-    email: { type: String, required: true, unique: true },
-    passwordHash: { type: String, required: true },
-    timestamp: { type: Date, default: Date.now }
-}, { versionKey: false, collection: 'users'});
+const {Schema, model} = mongoose;
 
-export default mongoose.models.User || mongoose.model("User", UserSchema);
+const userSchema = new Schema({
+        username: { type: String, required: true, unique: true },
+        passwordHash: { type: String, required: true },
+        lastSeen: { type: Date, default: Date.now }
+    }, 
+    { 
+        versionKey: false, 
+        collection: 'users'
+    }
+);
+
+let User;
+if (mongoose.models.User) {
+    User = mongoose.models.User
+}
+else {
+    User = model("User", userSchema);
+}
+export default User;

@@ -2,8 +2,8 @@ import React, {useEffect, useState} from "react";
 import { useRouter } from 'next/router';
 import styles from './Dashboard.module.css';
 import Link from "next/link";
-import NewApplication from "./NewApplication";
-import EditApplication from "./EditApplication";
+import NewApplication from "../components/NewApplication";
+import EditApplication from "../components/EditApplication";
 
 export default function Dashboard() {
     const router = useRouter();

@@ -1,8 +1,7 @@
-import { authenticate } from "../../utils/auth";
-import Application from "../../models/Application";
-import connectDb from "../../utils/connectDb";
-import App from "../editapp-page";
-import { rateLimiter } from "../../utils/rateLimit";
+import { authenticate } from "../../../utils/auth";
+import Application from "../../../models/Application";
+import connectDb from "../../../utils/connectDb";
+import { rateLimiter } from "../../../utils/rateLimit";
 
 async function handler(request, resource) {
     try {
@@ -13,7 +12,7 @@ async function handler(request, resource) {
             return resource.status(401).json({ message: "unauthorized" });
         }
 
-        const allowed = await rateLimiter(request, resource, "editApp");
+        const allowed = await rateLimiter(request, resource, "newApp");
         if (!allowed) return;
 
         if (request.method === "POST") { // SUBMISSION
@@ -37,22 +36,17 @@ async function handler(request, resource) {
             if (!folder?.trim()) {
                 return resource.status(400).json({ message: "folder"});
             }
-
-            const{id} = request.body;
-            const newApp = await Application.updateOne(
-            { _id: id }, // filter
-            {
-                $set: {
-                    title,
-                    company,
-                    type,
-                    status,
-                    link,
-                    appliedDate,
-                    folder
-                }
-            }
-            );
+            
+            const newApp = await Application.create({
+                title,
+                company,
+                type,
+                status,
+                link,
+                appliedDate,
+                folder,
+                userId
+            })
             return resource.status(201).json(newApp);
         }
     }

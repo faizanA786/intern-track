@@ -1,7 +1,7 @@
-import { authenticate } from "../../utils/auth";
-import Application from "../../models/Application";
-import connectDb from "../../utils/connectDb";
-import { rateLimiter } from "../../utils/rateLimit";
+import { authenticate } from "../../../utils/auth";
+import Application from "../../../models/Application";
+import connectDb from "../../../utils/connectDb";
+import { rateLimiter } from "../../../utils/rateLimit";
 
 async function handler(request, resource) {
     try {
