@@ -1,4 +1,3 @@
-import { authenticate } from "../../../utils/auth";
 import Application from "../../../models/Application";
 import connectDb from "../../../utils/connectDb";
 import { rateLimiter } from "../../../utils/rateLimit";
@@ -7,7 +6,7 @@ async function handler(request, resource) {
     try {
         await connectDb();
 
-        const userId = request.user?.id; // from auth middleware
+        const userId = request.user?.id; 
         if (!userId) {
             return resource.status(401).json({ message: "unauthorized" });
         }

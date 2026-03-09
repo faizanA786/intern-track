@@ -6,57 +6,55 @@ import Link from 'next/link';
 export default function Login() {
     const router = useRouter();
 
-    const [username, setusername] = useState(false);
-    const [confirmpassword, setConfirmPassword] = useState(false);
-    const [msg, setMsg] = useState('');  
+    const [usernameErr, setUsernameErr] = useState(false);
+    const [confirmPasswordErr, setConfirmPasswordErr] = useState(false);
+    const [msg, setMsg] = useState("");  
+
+    function handleStates(data) {
+        if (data.error === "username empty") {
+            setUsernameErr(true);
+            setMsg("Username must not be left empty");
+        }
+        else if (data.error === "password empty") {
+            setConfirmPasswordErr(true);
+            setMsg("Password must not be left empty");
+        }
+        else if (data.error === "user not found") {
+            setUsernameErr(true);
+            setMsg("This user was not found");
+        }
+        else if (data.error === "incorrect password") {
+            setConfirmPasswordErr(true);
+            setMsg("Incorrect password");
+        }
+    }
     
     async function handleSubmit(event) {
         event.preventDefault();
+        setMsg("Loading...")
+        setConfirmPasswordErr(false);
+        setUsernameErr(false);
         
         const form = event.target;
         const username = form.username.value;
         const password = form.password.value;
         
-        setConfirmPassword(false);
-        setusername(false);
-
         try {
-            const response = await fetch("/api/auth/login", {
+            const response = await fetch("/api/account/login", {
                 method: "POST",
                 headers: {"Content-Type": "application/json"},
                 body: JSON.stringify({username, password})
             });
 
-            if (response.status === 429) {
-                setMsg("Too many requests, please wait");
-                return;
-            }
-            
-            if (response.status === 404) {
-                setMsg("User not found");
-                setusername(true);
-                return;
-            }
-            if (response.status === 401) {
-                setMsg("Incorrect password");
-                setConfirmPassword(true);
-                return;
-            }
             if (!response.ok) {
                 const data = await response.json();
-                if (data.message === "username") {
-                    setusername(true);
-                }
-                if (data.message === "password") {
-                    setConfirmPassword(true);
-                }
-                setMsg("Fields must not be left empty");
+                handleStates(data)
                 return;
             }
 
             const data = await response.json();
             localStorage.setItem("token", data.token); 
-            router.push("/dashboard-page"); 
+            router.push("/Dashboard-Page"); 
 
         }
         catch(error) {
@@ -69,8 +67,8 @@ export default function Login() {
         <div className={styles.div}>
             <form className={styles.form} onSubmit={handleSubmit}>
                 <h1 className={styles.h1}>Sign In</h1>
-                <input name="username" className={username ? styles.errorInput : styles.input} placeholder="Username" required/>
-                <input name="password" className={confirmpassword ? styles.errorInput : styles.input} type="password"  placeholder="Password" required/>
+                <input name="username" className={usernameErr ? styles.errorInput : styles.input} placeholder="Username" required/>
+                <input name="password" className={confirmPasswordErr ? styles.errorInput : styles.input} type="password"  placeholder="Password" required/>
                 <button className={styles.button} type="submit">Login</button>
                 <p className={styles.err}>{msg}</p>
                 <p className={styles.p}>

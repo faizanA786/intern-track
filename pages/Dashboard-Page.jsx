@@ -57,9 +57,9 @@ export default function Dashboard() {
         }
     }
 
-    async function fetchFolders() { // and applications, refresh page
+    async function fetchFolders() { // applications, refresh page
         try { // init folder
-            const response = await fetch("/api/folder", {
+            const response = await fetch("/api/application/folder", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

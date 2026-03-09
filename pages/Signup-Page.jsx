@@ -15,28 +15,28 @@ export default function Signup() {
       if (data.error === "terms") {
           setMsg("Terms must be accepted");
       }
-      if (data.error === "empty password") {
+      else if (data.error === "empty password") {
           setPasswordErr(true);
           setMsg("Fields must not be left empty");
       }
-      if (data.error === "empty confirm password") {
+      else if (data.error === "empty confirm password") {
           setConfirmPasswordErr(true);
           setMsg("Fields must not be left empty");
       }
-      if (data.error === "passwords dont match") {
+      else if (data.error === "passwords dont match") {
           setPasswordErr(true);
           setConfirmPasswordErr(true);
           setMsg("Passwords do not match");
       }
-      if (data.error === "password length") {
+      else if (data.error === "password length") {
           setPasswordErr(true)
           setMsg("Password must be atleast 6 characters");
       }
-      if (data.error === "username length") {
+      else if (data.error === "username length") {
           setUsernameErr(true)
           setMsg("Username must be atleast 6 characters");
       }
-      if (data.error === "user already exists") {
+      else if (data.error === "user already exists") {
           setMsg("User already exists.");
       }
     }
