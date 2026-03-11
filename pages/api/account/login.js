@@ -32,7 +32,7 @@ export default async function handler(request, resource) {
         }
 
         // CHECK IF ACCOUNT EXISTS
-        const user = await User.findOne({username})
+        const user = await User.findOne({username: username})
         if (!user) {
             console.log("account doesnt exist")
             return resource.status(400).json({error: "user not found"})
@@ -51,8 +51,11 @@ export default async function handler(request, resource) {
             process.env.JWT_KEY,
             {expiresIn: "3d"}
         );
+        user.lastSeen = new Date()
+        user.save()
+
         console.log("logged in")
-        return resource.status(200).json({id: user._id, token: token})
+        return resource.status(200).json({token: token})
     }
     catch(error) {
         console.error(error);

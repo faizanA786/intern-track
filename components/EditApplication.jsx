@@ -26,8 +26,9 @@ export default function EditApplication({id, onSubmit, onClose}) {
 
     useEffect(() => {
         (async () => {
+            setMsg("Loading...")
             try {
-                const response = await fetch("/api/getApplication", {
+                const response = await fetch("/api/application/getApplication", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
@@ -37,12 +38,8 @@ export default function EditApplication({id, onSubmit, onClose}) {
                         id
                     })
                 });
-                if (response.status === 429) {
-                    setMsg("Too many requests, please wait");
-                    return;
-                }
-                if (response.status === 401) { // expired token
-                    router.push("/login-page");
+                if (!response.ok) { 
+                    router.push("/Login-Page");
                 }
 
                 const data = await response.json();
@@ -54,16 +51,18 @@ export default function EditApplication({id, onSubmit, onClose}) {
                 setPreLink(data.link);
                 setPreDate(data.appliedDate.slice(0, 10));
                 setPreFolder(data.folder);
+                setMsg("")
 
             } catch (error) {
                 console.log(error);
             }
         })();
-    }, []); // empty array means only run once when component mounts
+    }, []); // run once when component mounts
 
     async function handleDelete() {
+        setMsg("Loading...")
         try {
-            const response = await fetch("/api/deleteApplication", {
+            const response = await fetch("/api/application/deleteApplication", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -74,9 +73,13 @@ export default function EditApplication({id, onSubmit, onClose}) {
                 })
             });
 
-            const data = await response.json();
-            if (response.ok) {
+            // const data = await response.json();
+            if (!response.ok) {
+                router.push("/Login-Page");
+            }
+            else {
                 onSubmit();
+                setMsg("")
             }
         } 
         catch (error) {
@@ -85,7 +88,34 @@ export default function EditApplication({id, onSubmit, onClose}) {
         }
     }
 
+    function validateFields() {
+        if (data.error === "title") {
+            setTitleErr(true);
+        }
+        if (data.error === "company") {
+            setCompanyErr(true);
+        }
+        if (data.error === "link") {
+            setLinkErr(true);
+        }
+        if (data.error === "date") {
+            setDateErr(true);
+        }
+        if (data.error === "folder") {
+            setFolderErr(true);
+        }
+        if (data.error === "status") {
+            setStatusErr(true);
+        }
+        if (data.error === "type") {
+            setTypeErr(true);
+        }
+        setMsg("Fields must not be left empty");
+    }
+
     async function handleSubmit(event) {
+        setMsg("Loading...")
+
         event.preventDefault();
         const form = event.target;
 
@@ -104,7 +134,7 @@ export default function EditApplication({id, onSubmit, onClose}) {
         setTypeErr(false)
 
         try {
-            const response = await fetch("/api/editApplication", {
+            const response = await fetch("/api/application/editApplication", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -122,35 +152,13 @@ export default function EditApplication({id, onSubmit, onClose}) {
                 })
             });
 
-            if (response.status === 429) {
-                setMsg("Too many requests, please wait");
-                return;
-            }
-
             if (!response.ok) {
                 const data = await response.json();
-                if (data.message === "title") {
-                    setTitleErr(true);
+                if (data.error == "invalid/expired token") {
+                    router.push("/Login-Page");
                 }
-                if (data.message === "company") {
-                    setCompanyErr(true);
-                }
-                if (data.message === "link") {
-                    setLinkErr(true);
-                }
-                if (data.message === "date") {
-                    setDateErr(true);
-                }
-                if (data.message === "folder") {
-                    setFolderErr(true);
-                }
-                if (data.message === "status") {
-                    setStatusErr(true);
-                }
-                if (data.message === "type") {
-                    setTypeErr(true);
-                }
-                setMsg("Fields must not be left empty");
+                
+                validateFields(data)
                 return;
             }
 
@@ -159,7 +167,7 @@ export default function EditApplication({id, onSubmit, onClose}) {
             form.reset();
         } 
         catch (error) {
-            setMsg("Internal server error");
+            setMsg("backend error");
             console.error(error);
         }
     }

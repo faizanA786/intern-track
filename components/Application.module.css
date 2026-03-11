@@ -74,11 +74,10 @@
 }
 .groupErr {
     display: flex;
-    border: 1.5px solid red;
+    border: 4px solid red;
 }
 .box {
     display: flex;
-    border: 1px solid #ccc;    
     justify-content: center;
     align-items: center;
     background-color: black;

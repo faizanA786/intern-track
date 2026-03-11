@@ -4,22 +4,22 @@ import { connect } from "../../../utils/mongodbConnection";
 
 function validateFields(title, company, type, status, link, appliedDate, folder) {
     if (!title?.trim()) {
-        return resource.status(400).json({ error: "title"});
+        return { error: "title"};
     }
     if (!company?.trim()) {
-        return resource.status(400).json({ error: "company"});
+        return { error: "company"};
     }
     if (!type?.trim()) {
-        return resource.status(400).json({ error: "type"});
+        return { error: "type"};
     }
     if (!status?.trim()) {
-        return resource.status(400).json({ error: "status"});
+        return { error: "status"};
     }
     if (!appliedDate?.trim()) {
-        return resource.status(400).json({ error: "date"});
+        return { error: "date"};
     }
     if (!folder?.trim()) {
-        return resource.status(400).json({ error: "folder"});
+        return { error: "folder"};
     }
 }
 
@@ -28,38 +28,36 @@ export default async function handler(request, resource) {
         console.log("wrong method")
         return resource.json({error: "only POST methods allowed!"});
     }
-
+    
     try {
         await connect();
 
-        const userId = await verifyToken(request);
+        const userId = await verifyToken(request)
         if (!userId) {
-            return resource.status(401).json({ error: "invalid/expired token" });
+            return resource.status(400).json({ error: "invalid/expired token" });
         }
 
         const {title, company, type, status, link, appliedDate, folder} = request.body;
+        
         const res = validateFields(title, company, type, status, link, appliedDate, folder)
         if (res) {
-            return resource.status(400).json(res);
+            return resource.status(400).json(res)
         }
-
-        const{id} = request.body;
-        const app = await Application.findById(id);
-
-        app.title = title;
-        app.company = company;
-        app.type = type;
-        app.status = status;
-        app.link = link;
-        app.appliedDate = appliedDate;
-        app.folder = folder;
-
-        await app.save();
-
-        return resource.status(200).json(app);
+        
+        const newApp = await Application.create({
+            title,
+            company,
+            type,
+            status,
+            link,
+            appliedDate,
+            folder,
+            userId
+        })
+        return resource.status(200).json(newApp);
     }
     catch(error) {
-        console.error(error);
+        console.log(error);
         return resource.status(500).json({error: "backend error"});
     }
 }

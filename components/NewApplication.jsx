@@ -6,27 +6,20 @@ import { useRouter } from 'next/router';
 export default function NewApplication({ onClose, onSubmit }) {
     const router = useRouter();
 
-    const[typeErr, setTypeErr] = useState(false)
+    const[typeErr, setTypeErr] = useState(false) //intern/placement
     const[statusErr, setStatusErr] = useState(false)
-    const[title, setTitleErr] = useState(false)
-    const[company, setCompanyErr] = useState(false)
-    const[date, setDateErr] = useState(false)
-    const[link, setLinkErr] = useState(false)
-    const[folder, setFolderErr] = useState(false)
+    const[titleErr, setTitleErr] = useState(false)
+    const[companyErr, setCompanyErr] = useState(false)
+    const[dateErr, setDateErr] = useState(false)
+    const[linkErr, setLinkErr] = useState(false)
+    const[folderErr, setFolderErr] = useState(false)
     const[type, setType] = useState("")
     const[status, setStatus] = useState("")
     const[msg, setMsg] = useState("");
 
     async function handleSubmit(event) {
         event.preventDefault();
-        const form = event.target;
-
-        const title = form.title.value;
-        const company = form.company.value;
-        const link = form.link.value;
-        const appliedDate = form.appliedDate.value;
-        const folder = form.folder.value;
-
+        setMsg("Loading...")
         setTitleErr(false)
         setCompanyErr(false)
         setDateErr(false)
@@ -35,8 +28,40 @@ export default function NewApplication({ onClose, onSubmit }) {
         setStatusErr(false)
         setTypeErr(false)
 
+        const form = event.target;
+        const title = form.title.value;
+        const company = form.company.value;
+        const link = form.link.value;
+        const appliedDate = form.appliedDate.value;
+        const folder = form.folder.value;
+
+        function validateFields(data) {
+            if (data.error === "title") {
+                setTitleErr(true);
+            }
+            if (data.error === "company") {
+                setCompanyErr(true);
+            }
+            if (data.error === "link") {
+                setLinkErr(true);
+            }
+            if (data.error === "date") {
+                setDateErr(true);
+            }
+            if (data.error === "folder") {
+                setFolderErr(true);
+            }
+            if (data.error === "status") {
+                setStatusErr(true);
+            }
+            if (data.error === "type") {
+                setTypeErr(true);
+            }
+            setMsg("Fields must not be left empty");
+        }
+
         try {
-            const response = await fetch("/api/application", {
+            const response = await fetch("/api/application/newApplication", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -53,38 +78,12 @@ export default function NewApplication({ onClose, onSubmit }) {
                 })
             });
 
-            if (response.status === 429) {
-                setMsg("Too many requests, please wait");
-                return;
-            }
-            if (response.status === 401) { // expired token
-                router.push("/login-page");
-            }
-
             if (!response.ok) {
                 const data = await response.json();
-                if (data.message === "title") {
-                    setTitleErr(true);
+                if (data.error == "invalid/expired token") {
+                    router.push("/Login-Page");
                 }
-                if (data.message === "company") {
-                    setCompanyErr(true);
-                }
-                if (data.message === "link") {
-                    setLinkErr(true);
-                }
-                if (data.message === "date") {
-                    setDateErr(true);
-                }
-                if (data.message === "folder") {
-                    setFolderErr(true);
-                }
-                if (data.message === "status") {
-                    setStatusErr(true);
-                }
-                if (data.message === "type") {
-                    setTypeErr(true);
-                }
-                setMsg("Fields must not be left empty");
+                validateFields(data);
                 return;
             }
 
@@ -133,12 +132,12 @@ export default function NewApplication({ onClose, onSubmit }) {
                 </div>
 
                 <div className={styles.grid}>
-                    <input name="title" className={title ? styles.errorInput : styles.input} type="text" placeholder="Job Title" required />
-                    <input name="company" className={company ? styles.errorInput : styles.input} type="text" placeholder="Company Name" required />
+                    <input name="title" className={titleErr ? styles.errorInput : styles.input} type="text" placeholder="Job Title" required />
+                    <input name="company" className={companyErr ? styles.errorInput : styles.input} type="text" placeholder="Company Name" required />
 
-                    <input name="link" className={link ? styles.errorInput : styles.input} type="url" placeholder="Application Link (optional)" />
-                    <input name="appliedDate" className={date ? styles.errorInput : styles.input} type="date" placeholder="Applied Date" />
-                    <input name="folder" className={folder ? styles.errorInput : styles.input} type="text" placeholder="Folder Name" defaultValue="default" />
+                    <input name="link" className={linkErr ? styles.errorInput : styles.input} type="url" placeholder="Application Link (optional)" />
+                    <input name="appliedDate" className={dateErr ? styles.errorInput : styles.input} type="date" placeholder="Applied Date" />
+                    <input name="folder" className={folderErr ? styles.errorInput : styles.input} type="text" placeholder="Folder Name" defaultValue="default" />
 
                     <div className={styles.centre}>
                         <button className={styles.button} type="submit">Create</button>

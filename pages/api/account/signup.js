@@ -55,7 +55,7 @@ export default async function handler(request, resource) {
         await connect();
 
         // CHECK FOR EXISTING ACCOUNTS
-        const existingUser = await User.findOne({username});
+        const existingUser = await User.findOne({username: username});
         if (existingUser) {
             console.log("user already exists")
             return resource.status(400).json({error: "user already exists"});
@@ -79,7 +79,7 @@ export default async function handler(request, resource) {
         );
 
         console.log("user created")
-        return resource.status(200).json({id: userFinal._id, token: token});
+        return resource.status(200).json({token: token});
     }
     catch (error) {
         console.log(error);

@@ -1,34 +1,30 @@
-import { authenticate } from "../../../utils/auth";
 import Application from "../../../models/Application";
-import connectDb from "../../../utils/connectDb";
-import { rateLimiter } from "../../../utils/rateLimit";
+import { connect } from "../../../utils/mongodbConnection";
+import { verifyToken } from "../../../utils/verifyToken";
 
+export default async function handler(request, resource) {
+    if (request.method !== "POST") {
+        console.log("wrong method")
+        return resource.json({error: "only POST methods allowed!"});
+    }
 
-async function handler(request, resource) {
     try {
-        await connectDb();
+        await connect();
 
-        const userId = request.user?.id;
+        const userId = await verifyToken(request);
         if (!userId) {
-            return resource.status(401).json({ message: "unauthorized" });
+            return resource.status(400).json({ error: "invalid/expired token" });
         }
 
-        const allowed = await rateLimiter(request, resource, "editApp");
-        if (!allowed) return;
-
-        if (request.method === "POST") { // GET APP DATA
-            const {id} = request.body;
-            const app = await Application.findById(id);
-            if (!app) {
-                return resource.status(400).json({error: "error"});
-            }
-            return resource.status(200).json(app);
+        const {id} = request.body;
+        const app = await Application.findById(id);
+        if (!app) {
+            return resource.status(400).json({error: "app doesnt exist"});
         }
+        return resource.status(200).json(app);
     }
     catch(error) {
         console.error(error);
-        return resource.status(500).json({message: "internal server error"});
+        return resource.status(500).json({error: "internal server error"});
     }
-    
-    resource.status(405).end(); // method not allowed
 }

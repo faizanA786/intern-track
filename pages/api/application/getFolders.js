@@ -1,42 +1,35 @@
 import Application from "../../../models/Application";
-import connectDb from "../../../utils/connectDb";
-import { rateLimiter } from "../../../utils/rateLimit";
+import {connect} from "../../../utils/mongodbConnection";
+import { verifyToken } from "../../../utils/verifyToken";
 
-async function handler(request, resource) {
+export default async function handler(request, resource) {
+    if (request.method !== "POST") {
+        console.log("wrong method")
+        return resource.json({error: "only POST methods allowed!"});
+    }
+
     try {
-        await connectDb();
+        await connect();
 
-        const userId = request.user?.id; 
-        if (!userId) {
-            return resource.status(401).json({ message: "unauthorized" });
+        // VERIFY USER TOKEN AND GET ID
+        const decodedUserId = await verifyToken(request); 
+        if (!decodedUserId) {
+            return resource.status(400).json({ error: "auth failed" });
         }
 
-        const allowed = await rateLimiter(request, resource, "getApp");
-        if (!allowed) return;
-
-        if (request.method === "POST") {
-            const folder = request.body.folder;
-            if (folder === "all") { // all
-                const apps = await Application.find({
-                    userId
-                }).sort({ appliedDate: -1});
-                return resource.status(201).json(apps);
-            }
-            
-            const apps = await Application.find({ // specific
-                folder,
-                userId
-            }).sort({ appliedDate: -1});
-            console.log(folder);
-            return resource.status(201).json(apps);
+        // GET ALL APPS
+        const folder = request.body.folder;
+        if (folder === "all") {
+            const apps = await Application.find({userId: decodedUserId}).sort({appliedDate: -1});
+            return resource.status(200).json(apps);
+        }
+        else{  // GET APPS FOR A SPECIFIC FOLDER
+            const apps = await Application.find({folder: folder, userId: decodedUserId}).sort({ appliedDate: -1});
+            return resource.status(200).json(apps);
         }
     }
     catch(error) {
         console.error(error);
-        return resource.status(500).json({message: "internal server error"});
+        return resource.status(500).json({error: "backend error"});
     }
-    
-    resource.status(405).end(); // method not allowed
 }
-
-export default authenticate(handler)
