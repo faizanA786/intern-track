@@ -1,25 +1,19 @@
-import jwt from "jsonwebtoken";
-import { connect } from "./mongodbConnection";
-import User from "../models/User";
-
-async function updateLastSeen(decodedId) {
-    await connect();
-
-    const user = await User.findOne({_id: decodedId})
-    user.lastSeen = new Date()
-    user.save()
-}
+import {jwtVerify} from "jose";
 
 export async function verifyToken(request) {
-    const token = request.headers.authorization.split(" ")[1]
+    const token = request.cookies.get("token")?.value
+    if (!token) {
+        console.log("no token")
+        return
+    }
 
     try {
-        const decodedToken = jwt.verify(token, process.env.JWT_KEY)
-
-        updateLastSeen(decodedToken.userId);
-        return decodedToken.userId;
+        const secret = new TextEncoder().encode(process.env.JWT_KEY) //secret must be encoded as Uint8Arr via textencoder
+        const{payload} = await jwtVerify(token, secret)
+        return payload.userId;
     }
     catch(error) {
+        console.log(error)
         console.log("expired/invalid token")
     }
 }

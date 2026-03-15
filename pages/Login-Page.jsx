@@ -52,8 +52,8 @@ export default function Login() {
                 return;
             }
 
-            const data = await response.json();
-            localStorage.setItem("token", data.token); 
+            // const data = await response.json();
+            // localStorage.setItem("token", data.token); 
             router.push("/Dashboard-Page"); 
 
         }

@@ -1,4 +1,3 @@
-
 import mongoose from 'mongoose';
 
 let cachedConnection = false;

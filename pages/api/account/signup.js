@@ -55,17 +55,17 @@ export default async function handler(request, resource) {
         await connect();
 
         // CHECK FOR EXISTING ACCOUNTS
-        const existingUser = await User.findOne({username: username});
+        const existingUser = await User.findOne({username: username.trim()});
         if (existingUser) {
             console.log("user already exists")
             return resource.status(400).json({error: "user already exists"});
         }
 
         // CREATE NEW ACCOUNT IN THE DATABASE
-        const passwordHash = await bcrypt.hash(password, 10);
+        const passwordHash = await bcrypt.hash(password.trim(), 10);
         const newUser = await User({
             // auto-id
-            username,
+            username: username.trim(),
             passwordHash,
             lastSeen: new Date()
         })
@@ -78,8 +78,13 @@ export default async function handler(request, resource) {
             {expiresIn: "3d"}
         );
 
+        resource.setHeader(
+            "Set-Cookie",
+            `token=${token}; HttpOnly; Path=/; Max-Age=${60*60*24*3}; SameSite=Lax`
+        )
+
         console.log("user created")
-        return resource.status(200).json({token: token});
+        return resource.status(200).json({error: "none"});
     }
     catch (error) {
         console.log(error);

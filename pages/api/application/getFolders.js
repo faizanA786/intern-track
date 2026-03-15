@@ -1,6 +1,7 @@
 import Application from "../../../models/Application";
 import {connect} from "../../../utils/mongodbConnection";
-import { verifyToken } from "../../../utils/verifyToken";
+import { verifyToken } from "../../../utils/lastSeen";
+import { updateLastSeen } from "../../../utils/lastSeen";
 
 export default async function handler(request, resource) {
     if (request.method !== "POST") {
@@ -10,21 +11,18 @@ export default async function handler(request, resource) {
 
     try {
         await connect();
-
-        // VERIFY USER TOKEN AND GET ID
-        const decodedUserId = await verifyToken(request); 
-        if (!decodedUserId) {
-            return resource.status(400).json({ error: "auth failed" });
-        }
+        
+        const userId = request.headers["user-id"]
+        updateLastSeen(userId)
 
         // GET ALL APPS
         const folder = request.body.folder;
         if (folder === "all") {
-            const apps = await Application.find({userId: decodedUserId}).sort({appliedDate: -1});
+            const apps = await Application.find({userId: userId}).sort({appliedDate: -1});
             return resource.status(200).json(apps);
         }
         else{  // GET APPS FOR A SPECIFIC FOLDER
-            const apps = await Application.find({folder: folder, userId: decodedUserId}).sort({ appliedDate: -1});
+            const apps = await Application.find({folder: folder, userId: userId}).sort({ appliedDate: -1});
             return resource.status(200).json(apps);
         }
     }

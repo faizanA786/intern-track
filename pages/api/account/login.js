@@ -32,14 +32,14 @@ export default async function handler(request, resource) {
         }
 
         // CHECK IF ACCOUNT EXISTS
-        const user = await User.findOne({username: username})
+        const user = await User.findOne({username: username.trim()})
         if (!user) {
             console.log("account doesnt exist")
             return resource.status(400).json({error: "user not found"})
         }
 
         // CHECK PASSWORD FOR ACCOUNT
-        const passwordMatch = await bcrypt.compare(password, user.passwordHash);
+        const passwordMatch = await bcrypt.compare(password.trim(), user.passwordHash);
         if (!passwordMatch) {
             console.log("incorrect password")
             return resource.status(400).json({error: "incorrect password"})
@@ -54,8 +54,14 @@ export default async function handler(request, resource) {
         user.lastSeen = new Date()
         user.save()
 
+        // SET COOKIE
+        resource.setHeader(
+            "Set-Cookie",
+            `token=${token}; HttpOnly; Path=/; Max-Age=${60*60*24*3}; SameSite=Lax`
+        )
+
         console.log("logged in")
-        return resource.status(200).json({token: token})
+        return resource.status(200).json({error: "none"})
     }
     catch(error) {
         console.error(error);

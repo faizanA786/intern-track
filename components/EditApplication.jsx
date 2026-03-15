@@ -32,7 +32,6 @@ export default function EditApplication({id, onSubmit, onClose}) {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
-                        "Authorization": "Bearer " + localStorage.getItem("token")
                     },
                     body: JSON.stringify({
                         id
@@ -66,7 +65,6 @@ export default function EditApplication({id, onSubmit, onClose}) {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    "Authorization": "Bearer " + localStorage.getItem("token")
                 },
                 body: JSON.stringify({
                     id
@@ -138,7 +136,6 @@ export default function EditApplication({id, onSubmit, onClose}) {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    "Authorization": "Bearer " + localStorage.getItem("token")
                 },
                 body: JSON.stringify({
                     id,

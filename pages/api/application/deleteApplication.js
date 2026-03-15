@@ -1,6 +1,7 @@
 import Application from "../../../models/Application";
-import { verifyToken } from "../../../utils/verifyToken";
+import { verifyToken } from "../../../utils/lastSeen";
 import { connect } from "../../../utils/mongodbConnection";
+import { updateLastSeen } from "../../../utils/lastSeen";
 
 export default async function handler(request, resource) {
     if (request.method !== "POST") {
@@ -11,13 +12,11 @@ export default async function handler(request, resource) {
     try {
         await connect();
 
-        const userId = await verifyToken(request);
-        if (!userId) {
-            return resource.status(400).json({ error: "invalid/expired token" });
-        }
+        const userId = request.headers["user-id"]
+        updateLastSeen(userId)
 
         const {id} = request.body;
-        const app = await Application.findByIdAndDelete(id);
+        const app = await Application.findOneAndDelete({_id: id, userId: userId});
         if (!app) {
             return resource.status(400).json({error: "not found"});
         }

@@ -36,7 +36,6 @@ export default function Dashboard() {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    "Authorization": "Bearer " + localStorage.getItem("token")
                 },
                 body: JSON.stringify({
                     folder: "all"
@@ -70,7 +69,6 @@ export default function Dashboard() {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    "Authorization": "Bearer " + localStorage.getItem("token")
                 },
                 body: JSON.stringify({
                     folder: selected

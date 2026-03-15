@@ -1,6 +1,7 @@
 import Application from "../../../models/Application";
-import { verifyToken } from "../../../utils/verifyToken";
+import { verifyToken } from "../../../utils/lastSeen";
 import { connect } from "../../../utils/mongodbConnection";
+import { updateLastSeen } from "../../../utils/lastSeen";
 
 function validateFields(title, company, type, status, link, appliedDate, folder) {
     if (!title?.trim()) {
@@ -32,10 +33,8 @@ export default async function handler(request, resource) {
     try {
         await connect();
 
-        const userId = await verifyToken(request)
-        if (!userId) {
-            return resource.status(400).json({ error: "invalid/expired token" });
-        }
+        const userId = request.headers["user-id"]
+        updateLastSeen(userId)
 
         const {title, company, type, status, link, appliedDate, folder} = request.body;
         
