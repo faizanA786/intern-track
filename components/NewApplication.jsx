@@ -58,6 +58,10 @@ export default function NewApplication({ onClose, onSubmit }) {
                 setTypeErr(true);
             }
             setMsg("Fields must not be left empty");
+
+            if (data.error === "timeout") {
+                setMsg("Too many request, slow down.")
+            }
         }
 
         try {
@@ -79,8 +83,12 @@ export default function NewApplication({ onClose, onSubmit }) {
 
             if (!response.ok) {
                 const data = await response.json();
-                if (data.error == "invalid/expired token") {
-                    router.push("/Login-Page");
+                if (data.error == "timeout") {
+                    setMsg("Too many requests, slow down")
+                    return
+                }
+                else if (data.error === "invalid/expired token") {
+                    router.push("/Login-Page")
                 }
                 validateFields(data);
                 return;

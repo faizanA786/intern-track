@@ -10,10 +10,10 @@ export const config = {
 export async function middleware(request: NextRequest) {
     const route = request.nextUrl.pathname
     // RATE LIMITER
-    const ip = request.headers.get("x-real-ip")
-    if (rateLimiter(ip)) {
+    const ip = request.headers.get("x-real-ip") ?? request.headers.get("x-forwarded-for")
+    if (await rateLimiter(ip)) {
         console.log("timeout")
-        return
+        return NextResponse.json({error: "timeout"}, {status: 400})
     }
 
     //PUBLIC 
@@ -25,8 +25,7 @@ export async function middleware(request: NextRequest) {
     if (route.startsWith("/api/application/")) {
         const userId = await verifyToken(request)
         if (!userId) {
-            const loginURL = new URL("/Login-Page", request.url)
-            return NextResponse.redirect(loginURL)
+            return NextResponse.json({ error: "invalid/expired token" }, { status: 400 })
         }
 
         const res = NextResponse.next()

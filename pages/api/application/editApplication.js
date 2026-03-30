@@ -5,22 +5,22 @@ import { updateLastSeen } from "../../../utils/lastSeen";
 
 function validateFields(title, company, type, status, link, appliedDate, folder) {
     if (!title?.trim()) {
-        return resource.status(400).json({ error: "title"});
+        return { error: "title"}
     }
     if (!company?.trim()) {
-        return resource.status(400).json({ error: "company"});
+        return { error: "company"}
     }
     if (!type?.trim()) {
-        return resource.status(400).json({ error: "type"});
+        return { error: "type"}
     }
     if (!status?.trim()) {
-        return resource.status(400).json({ error: "status"});
+        return { error: "status"}
     }
     if (!appliedDate?.trim()) {
-        return resource.status(400).json({ error: "date"});
+        return { error: "date"}
     }
     if (!folder?.trim()) {
-        return resource.status(400).json({ error: "folder"});
+        return { error: "folder"}
     }
 }
 

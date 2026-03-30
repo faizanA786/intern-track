@@ -39,6 +39,9 @@ export default function Signup() {
       else if (data.error === "user already exists") {
           setMsg("User already exists.");
       }
+      else if (data.error === "timeout") {
+          setMsg("Too many request, slow down.")
+      }
     }
 
     async function handleSubmit(event) {

@@ -8,6 +8,8 @@ import EditApplication from "../components/EditApplication";
 export default function Dashboard() {
     const router = useRouter();
 
+    const[msg, setMsg] = useState("")
+
     const[id, setId] = useState(null);
     const [showNewAppForm, setShowNewAppForm] = useState(false);
     const [showEditForm, setShowEditForm] = useState(false);
@@ -31,6 +33,7 @@ export default function Dashboard() {
     }, [applications]) //runs when applications state changes to update stats
 
     async function fetchFolders() { // applications, refresh page
+        setMsg("Loading...")
         try { // init folder
             const response = await fetch("/api/application/getFolders", {
                 method: "POST",
@@ -43,7 +46,15 @@ export default function Dashboard() {
             });
 
             if (!response.ok) {
-                router.push("/Login-Page");
+                const data = await response.json()
+                if (data.error === "timeout") {
+                    setMsg("Too many requests, slow down")
+                    return
+                }
+                else if (data.error === "invalid/expired token") {
+                    router.push("/Login-Page")
+                }
+                // router.push("/Login-Page")
             }
 
             const data = await response.json();
@@ -55,6 +66,7 @@ export default function Dashboard() {
             const folderNames = [...new Set(data.map(app => app.folder))]; // get all users folder names
             setFolders(folderNames); // for use in displaying folders to choose from in frontend
             setApplications(data); // to display the folders apps in dashboard
+            setMsg("")
         }
         catch(error) {
             console.log(error);
@@ -63,6 +75,7 @@ export default function Dashboard() {
 
     // SPECIFIC FOLDER TO DISPLAY APPS FROM
     async function handleFolder(event) { 
+        setMsg("Loading...")
         const selected = event.target.value;
         try {
             const response = await fetch("/api/application/getFolders", {
@@ -75,12 +88,17 @@ export default function Dashboard() {
                 })
             });
             
-            if (!response.ok) {
-                router.push("/Login-Page");
+            const data = await response.json()
+            if (data.error === "timeout") {
+                setMsg("Too many requests, slow down")
+                return
+            }
+            else if (data.error === "invalid/expired token") {
+                router.push("/Login-Page")
             }
 
-            const data = await response.json();
             setApplications(data);
+            setMsg("")
         }
         catch(error) {
             console.log(error);
@@ -202,6 +220,7 @@ export default function Dashboard() {
                     </tbody>
                 </table>
             </div>
+            <p className={styles.err}>{msg}</p>
         </div>
     );
 }

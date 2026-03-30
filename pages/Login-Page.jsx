@@ -27,6 +27,9 @@ export default function Login() {
             setConfirmPasswordErr(true);
             setMsg("Incorrect password");
         }
+        else if (data.error === "timeout") {
+            setMsg("Too many request, slow down.")
+        }
     }
     
     async function handleSubmit(event) {

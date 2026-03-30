@@ -38,7 +38,13 @@ export default function EditApplication({id, onSubmit, onClose}) {
                     })
                 });
                 if (!response.ok) { 
-                    router.push("/Login-Page");
+                    const data = await response.json()
+                    console.log("parsing")
+                    if (data.error === "timeout") {
+                        setMsg("Too many requests, slow down")
+                        return
+                    }
+                    // router.push("/Login-Page");
                 }
 
                 const data = await response.json();
@@ -86,7 +92,7 @@ export default function EditApplication({id, onSubmit, onClose}) {
         }
     }
 
-    function validateFields() {
+    function validateFields(data) {
         if (data.error === "title") {
             setTitleErr(true);
         }
@@ -109,6 +115,10 @@ export default function EditApplication({id, onSubmit, onClose}) {
             setTypeErr(true);
         }
         setMsg("Fields must not be left empty");
+
+        if (data.error === "timeout") {
+            setMsg("Too many request, slow down.")
+        }
     }
 
     async function handleSubmit(event) {
@@ -153,6 +163,9 @@ export default function EditApplication({id, onSubmit, onClose}) {
                 const data = await response.json();
                 if (data.error == "invalid/expired token") {
                     router.push("/Login-Page");
+                }
+                else if (data.error === "invalid/expired token") {
+                    router.push("/Login-Page")
                 }
                 
                 validateFields(data)
