@@ -62,6 +62,9 @@ export default function NewApplication({ onClose, onSubmit }) {
             if (data.error === "timeout") {
                 setMsg("Too many request, slow down.")
             }
+            if (data.error === "limit") {
+                setMsg("Application limit reached")
+            }
         }
 
         try {

@@ -2,6 +2,7 @@ import Application from "../../../models/Application";
 import { verifyToken } from "../../../utils/lastSeen";
 import { connect } from "../../../utils/mongodbConnection";
 import { updateLastSeen } from "../../../utils/lastSeen";
+import App from "next/app";
 
 function validateFields(title, company, type, status, link, appliedDate, folder) {
     if (!title?.trim()) {
@@ -43,6 +44,12 @@ export default async function handler(request, resource) {
             return resource.status(400).json(res)
         }
         
+        const appCount = await Application.countDocuments({ userId });
+        if (appCount >= 5000) {
+            console.log("application limit reached")
+            return resource.status(500).json({error: "limit"})
+        }
+
         const newApp = await Application.create({
             title,
             company,

@@ -61,6 +61,13 @@ export default async function handler(request, resource) {
             return resource.status(400).json({error: "user already exists"});
         }
 
+        // CHECK DATABASE STORAGE
+        const userCount = await User.countDocuments();
+        if (userCount >= 300) {
+            console.log("user limit reached")
+            return resource.status(500).json({error: "limit"})
+        }
+
         // CREATE NEW ACCOUNT IN THE DATABASE
         const passwordHash = await bcrypt.hash(password.trim(), 10);
         const newUser = await User({

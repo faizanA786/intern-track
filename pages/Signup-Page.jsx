@@ -42,6 +42,9 @@ export default function Signup() {
       else if (data.error === "timeout") {
           setMsg("Too many request, slow down.")
       }
+      else if (data.error === "limit") {
+        setMsg("User limit reached")
+      }
     }
 
     async function handleSubmit(event) {

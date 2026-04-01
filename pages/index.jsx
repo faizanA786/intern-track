@@ -12,6 +12,7 @@ export default function Landing() {
         <div className={styles.wrapper}>
             <div className={styles.main}>
                 <div>
+                    <span className={styles.badge}>Internship Tracker</span>
                     <h1 className={styles.h1}>Intern-Track</h1>
                     <h2 className={styles.h2}>Track and organise your internship/placement applications, all in one place.</h2>
                     <div className={styles.container}>
