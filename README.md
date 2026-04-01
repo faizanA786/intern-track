@@ -1,18 +1,16 @@
 # Intern-Track
-Intern-Track is a simple platform to help students manage their internship/placement applications. It allows users to track application statuses, deadlines, company info and more all in one place.
+Intern-Track is a free online platform to help students manage their internship/placement applications.
 
-![Dashboard](https://i.imgur.com/1POL1qz.png)
+![Dashboard](https://i.imgur.com/d7gHLrr.png)
 
-### 🌐 Live Site
+## 🌐 Live Site
 [https://intern-track-eight.vercel.app/](https://intern-track-eight.vercel.app/)
 
 ## Features
-- Add, edit, and delete internship/placement applications  
-- Track statuses (e.g., Applied, Interview, Offer)  
-- Stateless user authentication system using JWT tokens  
-- Serverless API routes with Next.js  
+- Add, edit, delete internship/placement applications  
+- Track statuses (Applied, Interview, Offer, Rejected)
+- Group applications into folders
 
 ## Tech Stack
-- Frontend: React, CSS
-- Backend: Next.js API routes, JWT, MongoDB
-- Database: MongoDB
+- Frontend: React, JS, CSS
+- Backend: JS, NextJS middleware/API routes, JWT (Jose), MongoDB (Mongoose), Upstash Redis, Vercel
