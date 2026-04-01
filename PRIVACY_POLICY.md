@@ -11,6 +11,7 @@ We may collect the following information when you use InternTrack:
 - Username
 - Encrypted password (stored securely as a hash)
 - IP address (for rate limiting purposes)
+- Last seen timestamp (to track the last time a user accessed the service)
 
 ## 2. How We Use Your Information
 
