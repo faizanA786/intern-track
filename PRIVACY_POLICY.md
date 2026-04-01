@@ -1,6 +1,6 @@
 # Privacy Policy
 
-_Last updated: August 1, 2025_
+_Last updated: April, 2026_
 
 Intern-Track ("we", "our", or "us") respects your privacy. This Privacy Policy explains how we collect, use, and protect your personal information.
 
@@ -8,8 +8,8 @@ Intern-Track ("we", "our", or "us") respects your privacy. This Privacy Policy e
 
 We may collect the following information when you use InternTrack:
 
-- Forename
-- Email address
+- Username
+- Encrypted password (stored securely as a hash)
 - IP address (for rate limiting purposes)
 
 ## 2. How We Use Your Information
@@ -18,7 +18,6 @@ We use the collected data to:
 
 - Allow users to sign up and log in
 - Prevent abuse of the service through rate limiting
-- Communicate with you regarding your account (if needed)
 
 ## 3. Data Storage
 
@@ -28,7 +27,12 @@ We use [Upstash](https://upstash.com/) to store temporary rate-limiting data (ba
 
 ## 4. Cookies and Tracking
 
-We do not currently use cookies or other trackers. This may change in the future, in which case this policy will be updated accordingly.
+We use HTTP-only cookies to store authentication tokens when you log in. These cookies are required for the application to function securely.
+
+These cookies:
+- Are not accessible via client-side JavaScript
+- Are used only for authentication purposes
+- Do not track users across other websites
 
 ## 5. Your Rights
 
@@ -37,7 +41,7 @@ You have the right to:
 - Request access to your personal data
 - Request deletion of your account and associated data
 
-To exercise these rights, contact us at: 
+To exercise these rights, please open an issue or contact us via the GitHub repository where this project is hosted.
 
 ## 6. Changes to This Policy
 

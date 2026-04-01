@@ -2,21 +2,22 @@ import React, {useEffect, useState} from "react";
 import { useRouter } from 'next/router';
 import styles from './Dashboard.module.css';
 import Link from "next/link";
-import NewApplication from "./NewApplication";
-import EditApplication from "./EditApplication";
+import NewApplication from "../components/NewApplication";
+import EditApplication from "../components/EditApplication";
 
 export default function Dashboard() {
     const router = useRouter();
+
+    const[msg, setMsg] = useState("")
+
     const[id, setId] = useState(null);
-    
-    const [showNewForm, setShowNewForm] = useState(false);
+    const [showNewAppForm, setShowNewAppForm] = useState(false);
     const [showEditForm, setShowEditForm] = useState(false);
 
     const[applied, setApplied] = useState(0);
     const[offer, setOffer] = useState(0);
     const[rejected, setRejected] = useState(0);
 
-    const[forename, getForename] = useState("user");
     const[folders, setFolders] = useState([]); // with applications
     const[applications, setApplications] = useState([]);
 
@@ -25,99 +26,88 @@ export default function Dashboard() {
         getStats();
     }, [])
 
-    useEffect(() => { // after apps are fetched 
+    useEffect(() => { 
         if (applications.length > 0) {
             getStats();
         }
-    }, [applications]) //runs when applications state changes
+    }, [applications]) //runs when applications state changes to update stats
 
-    async function getStats() {
-        let appliedCount = 0
-        let rejectCount = 0
-        let offerCount = 0
-
-        try {
-            for (let app of applications) {
-                if (app.status == "Applied") {
-                    appliedCount += 1
-                }
-                if (app.status == "Rejected") {
-                    rejectCount += 1
-                }
-                if (app.status == "Offer") {
-                    offerCount += 1
-                }
-            }
-            setApplied(appliedCount);
-            setRejected(rejectCount);
-            setOffer(offerCount);
-        }
-        catch(error) {
-            console.log(error);
-        }
-    }
-
-    async function fetchFolders() { // and applications, refresh page
+    async function fetchFolders() { // applications, refresh page
+        setMsg("Loading...")
         try { // init folder
-            const response = await fetch("/api/folder", {
+            const response = await fetch("/api/application/getFolders", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    "Authorization": "Bearer " + localStorage.getItem("token")
                 },
                 body: JSON.stringify({
                     folder: "all"
                 })
             });
 
-            if (response.status === 401) {
-                router.push("/login-page");
+            if (!response.ok) {
+                const data = await response.json()
+                if (data.error === "timeout") {
+                    setMsg("Too many requests, slow down")
+                    return
+                }
+                else if (data.error === "invalid/expired token") {
+                    router.push("/Login-Page")
+                }
+                // router.push("/Login-Page")
             }
 
             const data = await response.json();
             if (data.length === 0) {
-                console.log("empty");
-                setShowNewForm(true); 
+                console.log("user has no applications");
+                setShowNewAppForm(true); 
             }
-            const folderNames = [...new Set(data.map(app => app.folder))];
-            setFolders(folderNames);
-            setApplications(data);
+
+            const folderNames = [...new Set(data.map(app => app.folder))]; // get all users folder names
+            setFolders(folderNames); // for use in displaying folders to choose from in frontend
+            setApplications(data); // to display the folders apps in dashboard
+            setMsg("")
         }
         catch(error) {
             console.log(error);
         }
     }
 
-    async function handleFolder(event) {
+    // SPECIFIC FOLDER TO DISPLAY APPS FROM
+    async function handleFolder(event) { 
+        setMsg("Loading...")
         const selected = event.target.value;
         try {
-            const response = await fetch("/api/folder", {
+            const response = await fetch("/api/application/getFolders", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    "Authorization": "Bearer " + localStorage.getItem("token")
                 },
                 body: JSON.stringify({
                     folder: selected
                 })
             });
             
-            if (response.status === 401) {
-                router.push("/login-page");
+            const data = await response.json()
+            if (data.error === "timeout") {
+                setMsg("Too many requests, slow down")
+                return
+            }
+            else if (data.error === "invalid/expired token") {
+                router.push("/Login-Page")
             }
 
-            const data = await response.json();
             setApplications(data);
+            setMsg("")
         }
         catch(error) {
             console.log(error);
         }
     }
 
-
     function handleNewApp(event) { 
         event.preventDefault();
-        setShowNewForm(true);
+        setShowNewAppForm(true);
     }
 
     function handleEditApp(id) {
@@ -125,7 +115,26 @@ export default function Dashboard() {
         setShowEditForm(true);
     }
 
-    function getTypeColour(type) {
+    async function getStats() { // FRONTEND
+        let appliedCount = 0, rejectCount = 0, offerCount = 0
+
+        for (let app of applications) {
+            if (app.status == "Applied") {
+                appliedCount += 1
+            }
+            if (app.status == "Rejected") {
+                rejectCount += 1
+            }
+            if (app.status == "Offer") {
+                offerCount += 1
+            }
+        }
+        setApplied(appliedCount);
+        setRejected(rejectCount);
+        setOffer(offerCount);
+    }
+
+    function getTypeColour(type) { // FRONTEND
         if (type === "Internship") { 
             return "#6ebd15ff";
         }
@@ -135,7 +144,7 @@ export default function Dashboard() {
         return "black";
     }
 
-    function getStatusColour(type) {
+    function getStatusColour(type) { //FRONTEND
         if (type === "Offer") { 
             return "#82db70ff";
         }
@@ -153,9 +162,9 @@ export default function Dashboard() {
 
     return (
         <div className={styles.wrapper}>
-            {showNewForm ? (
+            {showNewAppForm ? (
                 <NewApplication 
-                    onClose={() => setShowNewForm(false)} 
+                    onClose={() => setShowNewAppForm(false)} 
                     onSubmit={() => window.location.reload()}
                 />
             ) : null}
@@ -167,7 +176,7 @@ export default function Dashboard() {
                 />
             ) : null}
 
-            <div className={showNewForm  || showEditForm ? styles.blurContainer : styles.container}>
+            <div className={showNewAppForm  || showEditForm ? styles.blurContainer : styles.container}>
                 <div className={ styles.filterContainer }>
                     <div className={styles.stat}>
                         <p>Applied: {applied}</p>
@@ -211,6 +220,7 @@ export default function Dashboard() {
                     </tbody>
                 </table>
             </div>
+            <p className={styles.err}>{msg}</p>
         </div>
     );
 }
